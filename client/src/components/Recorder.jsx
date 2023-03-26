@@ -2,7 +2,10 @@ import {useState} from 'react';
 import { useReactMediaRecorder } from 'react-media-recorder';
 import AudioReactRecorder, { RecordState } from 'audio-react-recorder';
 
-export default function Recorder() {
+export default function Recorder({
+  setPitch,
+  setPeriodicity
+}) {
   const { status, startRecording, stopRecording, mediaBlobUrl } = useReactMediaRecorder({
     blobPropertyBag: { type: 'audio/wav' },
     onStop: async(blobUrl, blob) => {
@@ -32,8 +35,9 @@ export default function Recorder() {
       method: 'POST',
       body: formData
     });
-    const data = await response.json();
-    console.log(data);
+    const {pitch, periodicity} = await response.json();
+    setPitch(pitch);
+    setPeriodicity(periodicity);
   }
   return (
     <div>

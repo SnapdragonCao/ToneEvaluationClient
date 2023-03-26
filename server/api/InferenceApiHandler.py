@@ -2,8 +2,10 @@ from flask_restful import Resource
 from flask import request, jsonify
 import penn
 from pydub import AudioSegment
-import wave
-import io
+import torch
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
 
 # Set parameters
 hopsize = 0.005
@@ -27,12 +29,12 @@ class InferenceApiHandler(Resource):
   def post(self):
     print("data received")
     sound_file = request.files['soundFile'] # Retrieve the file from data
-    sound_file.save('sound.wav') # Save the file to ./sound.wav
+    sound_file.save('storage/sound.wav') # Save the file to ./sound.wav
 
-    track = AudioSegment.from_file('sound.wav', format='wav')
+    track = AudioSegment.from_file('storage/sound.wav', format='wav')
     track = track.set_channels(1) # convert to mono
-    track.export('mono.wav', format='wav')
-    audio = penn.load.audio('mono.wav')
+    track.export('storage/mono.wav', format='wav')
+    audio = penn.load.audio('storage/mono.wav')
     pitch, periodicity = penn.from_audio(
       audio,
       penn.SAMPLE_RATE,
@@ -44,10 +46,32 @@ class InferenceApiHandler(Resource):
       pad=pad,
       interp_unvoiced_at=interp_unvoiced_at,
       gpu=gpu)
+    
+    draw_test(pitch, periodicity)
     pitch_output = pitch[0].tolist()
     periodicity_output = periodicity[0].tolist()
     return jsonify({
       'pitch': pitch_output,
       'periodicity': periodicity_output
     })
+  
+def draw_test(pitch, periodicity):
+    # Draw the contour
+    mask = periodicity < 0.1
+    # mask
+    pitch_tensor = torch.masked_fill(pitch, mask, torch.nan)[0].cpu()
+    pitch_tensor
+    periodicity_tensor = periodicity.cpu()[0]
+    plt.figure()
+    plt.plot(pitch_tensor)
+    plt.xlabel("Frame")
+    plt.ylabel("Pitch (Hz)")
+    plt.title("Pitch contour")
+    plt.savefig('storage/pitch.png')
+    plt.figure()
+    plt.plot(periodicity_tensor)
+    plt.xlabel("Periodicity")
+    plt.ylabel("Count")
+    plt.title("Periodicity histogram")
+    plt.savefig('storage/periodicity.png')
     
