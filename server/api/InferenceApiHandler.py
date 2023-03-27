@@ -16,7 +16,7 @@ gpu = None
 batch_size = 2048
 
 checkpoint = penn.DEFAULT_CHECKPOINT
-pad = True
+pad = False
 interp_unvoiced_at = 0.1
 
 class InferenceApiHandler(Resource):
