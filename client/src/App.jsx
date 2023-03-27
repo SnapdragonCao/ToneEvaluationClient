@@ -7,15 +7,19 @@ function App() {
   const [periodicity, setPeriodicity] = useState(null);
   return (
     <div className="App">
-      <p>Hello World</p>
-      <Recorder
-        setPitch={setPitch}
-        setPeriodicity={setPeriodicity}
-      />
-      <ContourCanvas
-        pitch={pitch}
-        periodicity={periodicity}
-      />
+      <p>Pitch Contour Recognition</p>
+      <div>
+        <Recorder
+          setPitch={setPitch}
+          setPeriodicity={setPeriodicity}
+        />
+        <div>
+          <ContourCanvas
+            pitch={pitch}
+            periodicity={periodicity}
+          />
+        </div>
+      </div>
     </div>
   )
 }

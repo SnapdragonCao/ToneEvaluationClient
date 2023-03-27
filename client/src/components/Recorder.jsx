@@ -6,24 +6,25 @@ export default function Recorder({
   setPitch,
   setPeriodicity
 }) {
-  const { status, startRecording, stopRecording, mediaBlobUrl } = useReactMediaRecorder({
-    blobPropertyBag: { type: 'audio/wav' },
-    onStop: async(blobUrl, blob) => {
-      // Update the blob file to the server
-      const formData = new FormData();
-      formData.append('soundFile', blob, 'input.wav');
-      formData.append('name', 'test');
-      const response = await fetch('http://localhost:5000/api/inference', {
-        method: 'POST',
-        body: formData
-      });
-      const data = await response.json();
-      console.log(data);
-    }
-  });
+  // const { status, startRecording, stopRecording, mediaBlobUrl } = useReactMediaRecorder({
+  //   blobPropertyBag: { type: 'audio/wav' },
+  //   onStop: async(blobUrl, blob) => {
+  //     // Update the blob file to the server
+  //     const formData = new FormData();
+  //     formData.append('soundFile', blob, 'input.wav');
+  //     formData.append('name', 'test');
+  //     const response = await fetch('http://localhost:5000/api/inference', {
+  //       method: 'POST',
+  //       body: formData
+  //     });
+  //     const data = await response.json();
+  //     console.log(data);
+  //   }
+  // });
 
   const [recording, setRecording] = useState(RecordState.STOP);
   const [blobUrl, setBlobUrl] = useState(null);
+  const [buttonText, setButtonTest] = useState('Press to record');
   async function onStop(audio) {
     setBlobUrl(audio.url);
     const blob = audio.blob
@@ -46,12 +47,17 @@ export default function Recorder({
       <button onClick={stopRecording}>Stop</button>
       <audio src={mediaBlobUrl} autoPlay controls /> */}
 
-      <p>AudioReactRecorder</p>
-      <AudioReactRecorder state={recording} onStop={onStop}
-      backgroundColor='white' foregroundColor='royalblue' canvasWidth='800' canvasHeight='30' />
-      <button onClick={() => {setRecording(RecordState.START)}}>Start</button>
-      <button onClick={() => {setRecording(RecordState.STOP)}}>Stop</button>
-      <audio src={blobUrl} autoPlay controls />
+      <div className='hidden'>
+        <AudioReactRecorder
+          state={recording}
+          onStop={onStop}
+        />
+      </div>
+      <button
+        onMouseDown={() => {setRecording(RecordState.START)}}
+        onMouseUp={() => {setRecording(RecordState.STOP)}}
+      >{buttonText}</button>
+      {/* <audio src={blobUrl} autoPlay controls /> */}
     </div>
   )
 }
