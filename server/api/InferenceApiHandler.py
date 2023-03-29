@@ -2,21 +2,21 @@ from flask_restful import Resource
 from flask import request, jsonify
 import penn
 from pydub import AudioSegment
-import torch
-import matplotlib
-matplotlib.use('Agg')
-import matplotlib.pyplot as plt
+# import matplotlib
+# matplotlib.use('Agg')
+# import matplotlib.pyplot as plt
+from . import utils
 
 # Set parameters
 hopsize = 0.005
-fmin = 30.
-fmax = 1000.
+fmin = 70.
+fmax = 500.
 
-gpu = None
+gpu = 0
 batch_size = 2048
 
 checkpoint = penn.DEFAULT_CHECKPOINT
-pad = False
+pad = True
 interp_unvoiced_at = 0.1
 
 class InferenceApiHandler(Resource):
@@ -47,31 +47,27 @@ class InferenceApiHandler(Resource):
       interp_unvoiced_at=interp_unvoiced_at,
       gpu=gpu)
     
-    draw_test(pitch, periodicity)
-    pitch_output = pitch[0].tolist()
-    periodicity_output = periodicity[0].tolist()
+    pitch_list = pitch.cpu()[0].tolist()
+    periodicity_list = periodicity.cpu()[0].tolist()
+    valid_pitch= utils.validate(pitch_list, periodicity_list, 0.3, 10)
+    smoothed_pitch = utils.smoother(valid_pitch, 10, 10)
+    # draw_test(smoothed_pitch, periodicity_list)
     return jsonify({
-      'pitch': pitch_output,
-      'periodicity': periodicity_output
+      'pitch': smoothed_pitch,
+      'periodicity': periodicity_list
     })
   
-def draw_test(pitch, periodicity):
-    # Draw the contour
-    mask = periodicity < 0.1
-    # mask
-    pitch_tensor = torch.masked_fill(pitch, mask, torch.nan)[0].cpu()
-    pitch_tensor
-    periodicity_tensor = periodicity.cpu()[0]
-    plt.figure()
-    plt.plot(pitch_tensor)
-    plt.xlabel("Frame")
-    plt.ylabel("Pitch (Hz)")
-    plt.title("Pitch contour")
-    plt.savefig('storage/pitch.png')
-    plt.figure()
-    plt.plot(periodicity_tensor)
-    plt.xlabel("Periodicity")
-    plt.ylabel("Count")
-    plt.title("Periodicity histogram")
-    plt.savefig('storage/periodicity.png')
+# def draw_test(pitch, periodicity):
+#     plt.figure()
+#     plt.plot(pitch)
+#     plt.xlabel("Frame")
+#     plt.ylabel("Pitch (Hz)")
+#     plt.title("Pitch contour")
+#     plt.savefig('storage/pitch.png')
+#     plt.figure()
+#     plt.plot(periodicity)
+#     plt.xlabel("Periodicity")
+#     plt.ylabel("Count")
+#     plt.title("Periodicity histogram")
+#     plt.savefig('storage/periodicity.png')
     

@@ -1,63 +1,49 @@
-import {useState} from 'react';
-import { useReactMediaRecorder } from 'react-media-recorder';
-import AudioReactRecorder, { RecordState } from 'audio-react-recorder';
+import { useState } from "react";
+import AudioReactRecorder, { RecordState } from "audio-react-recorder";
 
-export default function Recorder({
-  setPitch,
-  setPeriodicity
-}) {
-  // const { status, startRecording, stopRecording, mediaBlobUrl } = useReactMediaRecorder({
-  //   blobPropertyBag: { type: 'audio/wav' },
-  //   onStop: async(blobUrl, blob) => {
-  //     // Update the blob file to the server
-  //     const formData = new FormData();
-  //     formData.append('soundFile', blob, 'input.wav');
-  //     formData.append('name', 'test');
-  //     const response = await fetch('http://localhost:5000/api/inference', {
-  //       method: 'POST',
-  //       body: formData
-  //     });
-  //     const data = await response.json();
-  //     console.log(data);
-  //   }
-  // });
-
+export default function Recorder({ setPitch, setPeriodicity }) {
   const [recording, setRecording] = useState(RecordState.STOP);
   const [blobUrl, setBlobUrl] = useState(null);
-  const [buttonText, setButtonTest] = useState('Press to record');
+
   async function onStop(audio) {
     setBlobUrl(audio.url);
-    const blob = audio.blob
+    const blob = audio.blob;
     // Update the blob file to the server
     const formData = new FormData();
-    formData.append('soundFile', blob, 'input.wav');
-    formData.append('name', 'test');
-    const response = await fetch('http://localhost:5000/api/inference', {
-      method: 'POST',
-      body: formData
+    formData.append("soundFile", blob, "input.wav");
+    formData.append("name", "test");
+    const response = await fetch("http://localhost:5000/api/inference", {
+      method: "POST",
+      body: formData,
     });
-    const {pitch, periodicity} = await response.json();
+    const { pitch, periodicity } = await response.json();
     setPitch(pitch);
     setPeriodicity(periodicity);
   }
   return (
-    <div>
-      {/* <p>{status}</p>
-      <button onClick={startRecording}>Start</button>
-      <button onClick={stopRecording}>Stop</button>
-      <audio src={mediaBlobUrl} autoPlay controls /> */}
-
-      <div className='hidden'>
-        <AudioReactRecorder
-          state={recording}
-          onStop={onStop}
-        />
+    <div className="my-8 flex w-1/2 items-center justify-evenly">
+      <div className="hidden">
+        <AudioReactRecorder state={recording} onStop={onStop} />
       </div>
       <button
-        onMouseDown={() => {setRecording(RecordState.START)}}
-        onMouseUp={() => {setRecording(RecordState.STOP)}}
-      >{buttonText}</button>
-      {/* <audio src={blobUrl} autoPlay controls /> */}
+        onClick={() => {
+          setRecording(RecordState.START);
+        }}
+        type="button"
+        className="btn-circle btn h-24 w-24 border-none bg-emerald-700 shadow-xl hover:bg-emerald-600"
+      >
+        Record
+      </button>
+      <button
+        onClick={() => {
+          setRecording(RecordState.STOP);
+        }}
+        type="button"
+        className="btn-circle btn h-24 w-24 border-none bg-red-700 shadow-xl hover:bg-red-600"
+      >
+        Stop
+      </button>
+      {/* <audio src={blobUrl} autoPlay controls/> */}
     </div>
-  )
+  );
 }
