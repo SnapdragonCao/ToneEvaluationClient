@@ -1,7 +1,7 @@
 {
 	"mp3_folder": "C:/Users/<USERNAME>/Desktop/tone_perfect_all_mp3/tone_perfect",
-	"csv_folder": "C:/Users/<USERNAME>/Desktop/ToneSim/datasets",
-	"models_folder": "C:/Users/<USERNAME>/Desktop/ToneSim/saved_models",
+	"csv_folder": "./datasets",
+	"models_folder": "./saved_models",
 	"pretrained_model_name": "best_multitask_model.pth",
 	"siamese_model_name": "best_siamese_model.pth",
 	"train_split": 0.6,
