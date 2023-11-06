@@ -16,6 +16,17 @@ function App() {
           <p className="mt-8 text-right italic text-gray-700">Powered by AI</p>
         </div>
 
+        <div>
+          <form
+            method="POST"
+            action="http://localhost:5000/inference"
+            encType="multipart/form-data"
+            >
+              <input type="file" name="file" />
+              <button type="submit">Submit</button>
+            </form>
+        </div>
+
         <div
           className="flex flex-col w-4/5 h-3/5 justify-between items-start"
           

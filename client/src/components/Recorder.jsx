@@ -12,7 +12,7 @@ export default function Recorder({ setPitch, setPeriodicity }) {
     const formData = new FormData();
     formData.append("soundFile", blob, "input.wav");
     formData.append("name", "test");
-    const response = await fetch("http://localhost:5000/api/inference", {
+    const response = await fetch("http://localhost:5000/inference", {
       method: "POST",
       body: formData,
     });
