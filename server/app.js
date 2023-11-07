@@ -1,4 +1,5 @@
 const { spawn } = require('child_process');
+const fs = require('fs');
 const express = require('express');
 const cors = require('cors');
 const multer = require('multer');
@@ -28,10 +29,15 @@ app.post('/inference', upload.single('file'), (req, res) => {
 
 
   // Python command line invocation
-  const pythonProcess = spawn('python', ['./inference/inference.py', '-c', './inference/config.json', '-r', './inference/examples/ao1_MV1_MP3.mp3', '-i', './storage/audio.wav']);
+  const pythonProcess = spawn('python', [ '-W', 'ignore', './inference/inference.py', '-c', './inference/config.json', '-r', './inference/examples/ao1_MV1_MP3.mp3', '-i', './storage/audio.wav', '-c', './configs/config.json']);
   pythonProcess.stdout.on('data', (data) => {
     const result = data.toString();
     const [pinyin, tone, score] = result.split('\n').slice(1, 4).map(x => x.split(': ')[1]);
+    console.log( 'Result:\n',{
+      pinyin,
+      tone,
+      score: +score
+    })
     res.send({
       pinyin,
       tone,
@@ -44,6 +50,20 @@ app.post('/inference', upload.single('file'), (req, res) => {
   pythonProcess.on('close', code => {
     console.log(`child process exited with code ${code}`);
   });
+});
+
+app.get('/getDict', (req, res) => {
+  // Server json files
+  const pinyins = JSON.parse(fs.readFileSync('./configs/pinyins.json'));
+  const tones = JSON.parse(fs.readFileSync('./configs/tones.json'));
+  const characters = JSON.parse(fs.readFileSync('./configs/characterDict.json'));
+
+  res.send({
+    pinyins: Object.keys(pinyins),
+    tones: Object.keys(tones),
+    characterDict: characters
+  });
+  console.log('Sent pinyins and tones.');
 });
 
 app.listen(port, () => {
