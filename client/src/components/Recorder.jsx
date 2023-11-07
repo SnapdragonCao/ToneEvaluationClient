@@ -1,7 +1,7 @@
 import { useState } from "react";
 import AudioReactRecorder, { RecordState } from "audio-react-recorder";
 
-export default function Recorder({ setPitch, setPeriodicity }) {
+export default function Recorder({ setUserResult }) {
   const [recording, setRecording] = useState(RecordState.STOP);
   const [blobUrl, setBlobUrl] = useState(null);
 
@@ -10,15 +10,14 @@ export default function Recorder({ setPitch, setPeriodicity }) {
     const blob = audio.blob;
     // Update the blob file to the server
     const formData = new FormData();
-    formData.append("soundFile", blob, "input.wav");
+    formData.append("file", blob, "input.wav");
     formData.append("name", "test");
     const response = await fetch("http://localhost:5000/inference", {
       method: "POST",
       body: formData,
     });
-    const { pitch, periodicity } = await response.json();
-    setPitch(pitch);
-    setPeriodicity(periodicity);
+    const data = await response.json();
+    console.log(data);
   }
   return (
     <div className="my-8 flex w-1/2 items-center justify-evenly">
