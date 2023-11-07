@@ -1,7 +1,8 @@
-import { useCallback } from "react";
+import { useCallback, useContext } from "react";
+import { DictContext } from "../utilities/contexts";
 
-export default function SelectionPanel({ pinyinDict, setTarget, target }) {
-  
+export default function SelectionPanel({ setTarget, target }) {
+  const dictionaries = useContext(DictContext);
   const handleChange = useCallback( e => {
     const { name, value } = e.target;
     setTarget(prev => ({
@@ -18,7 +19,7 @@ export default function SelectionPanel({ pinyinDict, setTarget, target }) {
         name="pinyin"
         onChange={handleChange}
       >
-        {pinyinDict && pinyinDict.pinyins.map((pinyin) => (
+        {dictionaries && dictionaries.pinyins.map((pinyin) => (
           <option key={pinyin} value={pinyin}>
             {pinyin}
           </option>
@@ -30,7 +31,7 @@ export default function SelectionPanel({ pinyinDict, setTarget, target }) {
         name="tone"
         onChange={handleChange}
       >
-        {pinyinDict && pinyinDict.tones.map((tone) => (
+        {dictionaries && dictionaries.tones.map((tone) => (
           <option key={tone} value={tone}>
             {tone}
           </option>

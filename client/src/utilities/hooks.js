@@ -14,4 +14,4 @@ const useData = (url) => {
   return data;
 };
 
-export default useData;
+export { useData };
