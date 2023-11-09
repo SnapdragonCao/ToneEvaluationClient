@@ -9,9 +9,8 @@ import { getRandomTarget } from "./utilities/utilities";
 function App() {
   const dictUrl = import.meta.env.VITE_HOST_URL + "/getDict";
   const dictionaries = useData(dictUrl);
-  const [target, setTarget] = useState(null); 
+  const [target, setTarget] = useState(null);
   const [userResult, setUserResult] = useState(null);
-  
 
   useEffect(() => {
     // Randomly select a target on first render
@@ -19,19 +18,19 @@ function App() {
       const newTarget = getRandomTarget(dictionaries);
       setTarget(newTarget);
     }
-  }, [dictionaries])
+  }, [dictionaries]);
 
   return (
     <DictContext.Provider value={dictionaries}>
-    <div className="flex h-screen w-screen items-center justify-center bg-slate-700">
-      <div className="card flex h-4/5 w-4/5 flex-col items-center justify-around bg-slate-100 lg:max-w-7xl">
-        <div className="w-max">
-          <h1 className="text-center text-4xl font-bold text-gray-700">
-            Mandarin Tone Coach
-          </h1>
-        </div>
+      <div className="flex h-screen w-screen items-center justify-center bg-slate-700">
+        <div className="card flex h-4/5 w-4/5 flex-col items-center justify-around bg-slate-100 lg:max-w-7xl">
+          <div className="w-max">
+            <h1 className="text-center text-4xl font-bold text-gray-700">
+              Mandarin Tone Coach
+            </h1>
+          </div>
 
-        <div>
+          {/* <div>
           <form
             method="POST"
             action="http://localhost:5000/inference"
@@ -40,20 +39,19 @@ function App() {
               <input type="file" name="file" />
               <button type="submit">Submit</button>
             </form>
-        </div>
+        </div> */}
 
-        <SelectionPanel setTarget={setTarget} target={target}/>
+          <SelectionPanel setTarget={setTarget} target={target} />
 
-        <div
-          className="flex flex-col w-4/5 h-3/5 justify-between items-start"
-          
-        >
-          <Recorder setUserResult={setUserResult} />
-          <ResultCanvas content={target} />
-          <ResultCanvas content={userResult} />
+          <div className="flex h-3/5 w-4/5 flex-col items-start justify-between">
+            <Recorder setUserResult={setUserResult} target={target} />
+            <div className="flex w-full flex-row justify-between">
+              <ResultCanvas content={target} />
+              <ResultCanvas content={userResult} />
+            </div>
+          </div>
         </div>
       </div>
-    </div>
     </DictContext.Provider>
   );
 }

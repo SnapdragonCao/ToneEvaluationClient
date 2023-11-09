@@ -3,6 +3,7 @@ const fs = require('fs');
 const express = require('express');
 const cors = require('cors');
 const multer = require('multer');
+const { createAudioFile } = require('simple-tts-mp3');
 const app = express();
 
 app.use(cors());
@@ -26,10 +27,14 @@ app.get('/', (req, res) => {
 });
 
 app.post('/inference', upload.single('file'), (req, res) => {
-
+  const target = {...req.body};
+  console.log('Received target:', target);
+  // Create audio file
+  const targetPath = './storage/target';
+  createAudioFile(target.character, targetPath, 'zh');
 
   // Python command line invocation
-  const pythonProcess = spawn('python', [ '-W', 'ignore', './inference/inference.py', '-c', './inference/config.json', '-r', './inference/examples/ao1_MV1_MP3.mp3', '-i', './storage/audio.wav', '-c', './configs/config.json']);
+  const pythonProcess = spawn('python', [ '-W', 'ignore', './inference/inference.py', '-r', targetPath + '.mp3', '-i', './storage/audio.wav', '-c', './configs/config.json']);
   pythonProcess.stdout.on('data', (data) => {
     const result = data.toString();
     const [pinyin, tone, score] = result.split('\n').slice(1, 4).map(x => x.split(': ')[1]);

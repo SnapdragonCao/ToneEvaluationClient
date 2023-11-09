@@ -3,7 +3,7 @@ import AudioReactRecorder, { RecordState } from "audio-react-recorder";
 import { DictContext } from "../utilities/contexts";
 import { getCharacter } from "../utilities/utilities";
 
-export default function Recorder({ setUserResult }) {
+export default function Recorder({ setUserResult, target }) {
   const dictionaries = useContext(DictContext);
   const [recording, setRecording] = useState(RecordState.STOP);
   const [blobUrl, setBlobUrl] = useState(null);
@@ -14,8 +14,10 @@ export default function Recorder({ setUserResult }) {
     // Update the blob file to the server
     const formData = new FormData();
     formData.append("file", blob, "input.wav");
-    formData.append("name", "test");
-    const response = await fetch("http://localhost:5000/inference", {
+    formData.append("character", target.character);
+    formData.append("tone", target.tone);
+    formData.append("pinyin", target.pinyin);
+    const response = await fetch(`${import.meta.env.VITE_HOST_URL}/inference`, {
       method: "POST",
       body: formData,
     });
@@ -32,10 +34,10 @@ export default function Recorder({ setUserResult }) {
       <button
         onClick={() => {
           setRecording(RecordState.START);
-          // Only record up to 1 second
+          // Only record up to 3 seconds
           setTimeout(() => {
             setRecording(RecordState.STOP);
-          }, 1000);
+          }, 3000);
         }}
         type="button"
         className="btn-circle btn h-24 w-24 border-none bg-emerald-700 shadow-xl hover:bg-emerald-600"
