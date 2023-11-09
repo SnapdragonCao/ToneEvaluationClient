@@ -21,7 +21,6 @@ function App() {
     }
   }, [dictionaries])
 
-
   return (
     <DictContext.Provider value={dictionaries}>
     <div className="flex h-screen w-screen items-center justify-center bg-slate-700">

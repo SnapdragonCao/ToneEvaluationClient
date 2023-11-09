@@ -1,15 +1,18 @@
 import { useCallback, useContext } from "react";
 import { DictContext } from "../utilities/contexts";
+import { getCharacter } from "../utilities/utilities";
 
 export default function SelectionPanel({ setTarget, target }) {
   const dictionaries = useContext(DictContext);
   const handleChange = useCallback( e => {
-    const { name, value } = e.target;
+    const [ name, value ] = [e.target.name, e.target.value]
+    const character = name === "pinyin" ? getCharacter(dictionaries, value, target.tone) : getCharacter(dictionaries, target.pinyin, value);
     setTarget(prev => ({
       ...prev,
-      [name]: value
-    }))
-  }, [setTarget])
+      [name]: value,
+      character: character
+    }));
+  }, [setTarget, target])
   
   return (
     <div>
