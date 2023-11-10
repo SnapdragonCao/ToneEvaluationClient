@@ -1,5 +1,6 @@
 const { spawn } = require('child_process');
 const fs = require('fs');
+const path = require('path');
 const express = require('express');
 const cors = require('cors');
 const multer = require('multer');
@@ -43,6 +44,10 @@ app.post('/inference', upload.single('file'), (req, res) => {
       tone,
       score: +score
     })
+    // Load the target audio file
+    // const targetAudio = fs.readFileSync(targetPath + '.mp3');
+    // const targetBase64 = targetAudio.toString('base64');
+
     res.send({
       pinyin,
       tone,
@@ -69,6 +74,19 @@ app.get('/getDict', (req, res) => {
     characterDict: characters
   });
   console.log('Sent pinyins and tones.');
+});
+
+app.get('/reference', (req, res) => {
+  console.log(req.query)
+  const character = req.query.character;
+
+  // Create audio file
+  const targetPath = './storage/reference';
+  createAudioFile(character, targetPath, 'zh');
+
+  // Send the file back
+  res.sendFile(path.resolve(targetPath + '.mp3'));
+  console.log('Sent reference audio.');
 });
 
 app.listen(port, () => {
