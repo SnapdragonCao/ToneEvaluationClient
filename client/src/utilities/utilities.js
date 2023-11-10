@@ -42,7 +42,8 @@ export function getRandomTarget(dictionaries) {
  * @returns {boolean}
  */
 export function isValidPinyin(dictionaries, pinyin, tone) {
-  return ((pinyin in dictionaries.characterDict) && dictionaries.characterDict[pinyin][tone] !== null);
+  const _pinyin = u2v(pinyin);
+  return ((_pinyin in dictionaries.characterDict) && dictionaries.characterDict[_pinyin][tone] !== null);
 }
 
 /**
@@ -50,13 +51,37 @@ export function isValidPinyin(dictionaries, pinyin, tone) {
  * @param {DictionayType} dictionaries 
  * @param {string} pinyin 
  * @param {string} tone 
- * @returns {string | null} random character
+ * @returns {string} random character for the given pinyin and tone, or '⊗' if the pinyin and tone combination is invalid
  */
 export function getCharacter(dictionaries, pinyin, tone) {
   if (isValidPinyin(dictionaries, pinyin, tone)) {
     const characterIndex = Math.floor(Math.random() * dictionaries.characterDict[pinyin][tone].length);
     return dictionaries.characterDict[pinyin][tone][characterIndex];
   } else {
-    return null;
+    return '⊗';
   }
+}
+
+/**
+ * 
+ * @param {string} pinyin 
+ * @returns pinyin with 'ü' replaced by 'v'
+ */
+export function u2v(pinyin) {
+  if (pinyin.includes('ü')) {
+    return pinyin.replace('ü', 'v');
+  }
+  return pinyin;
+}
+
+/**
+ * 
+ * @param {string} pinyin 
+ * @returns pinyin with 'v' replaced by 'ü'
+ */
+export function v2u(pinyin) {
+  if (pinyin.includes('v')) {
+    return pinyin.replace('v', 'ü');
+  }
+  return pinyin;
 }
