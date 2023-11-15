@@ -19,7 +19,7 @@ def decode_one_hot(preds, mappings):
 def inference(user_input, reference, config):
     ref_mp3 = process_mp3(reference)
     ref_mp3 = ref_mp3.unsqueeze(0)
-    user_mp3 = process_mp3(user_input)
+    user_mp3 = process_mp3(user_input, trim=True)
     user_mp3 = user_mp3.unsqueeze(0)
 
     swap_key_values = lambda mappings: dict(zip(mappings.values(), mappings.keys()))
@@ -55,7 +55,7 @@ if __name__ == "__main__":
     config = read_json(args.config)
     ref_mp3 = process_mp3(args.reference)
     ref_mp3 = ref_mp3.unsqueeze(0)
-    user_mp3 = process_mp3(args.user_input)
+    user_mp3 = process_mp3(args.user_input, trim=True)
     user_mp3 = user_mp3.unsqueeze(0)
 
     swap_key_values = lambda mappings: dict(zip(mappings.values(), mappings.keys()))

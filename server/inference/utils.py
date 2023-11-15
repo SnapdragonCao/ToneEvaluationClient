@@ -37,11 +37,17 @@ def load_csv(folder: str, filename: str):
     with open(filepath, 'r') as f: 
         return list(csv.reader(f))[1:]
 
-def process_mp3(audio_fname, n_mfcc=128, max_pad=60):
+def process_mp3(audio_fname, n_mfcc=128, max_pad=60, trim=False):
     audio, sample_rate = librosa.core.load(audio_fname)
+    if trim:
+        audio, index = librosa.effects.trim(audio, top_db=20)
+        # sf.write("./examples/trimmed.wav", audio, sample_rate)
     mfcc = librosa.feature.mfcc(y=audio, sr=sample_rate, n_mfcc=n_mfcc)
     pad_width = max_pad - mfcc.shape[1]
-    mfcc = np.pad(mfcc, pad_width=((0, 0), (0, pad_width)), mode="constant")
+    if pad_width < 0:
+        mfcc = mfcc[:, :max_pad]
+    else:
+        mfcc = np.pad(mfcc, pad_width=((0, 0), (0, pad_width)), mode="constant")
     mfcc = torch.tensor(mfcc).unsqueeze(0)
     return mfcc
 
