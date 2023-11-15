@@ -9,6 +9,7 @@ This repository contains the demo for the course project of CS5647. To run the d
   cd ../ && yarn install
   cd ../client/ && yarn install
   ```
+- Rename `.env.example` into `.env` in both `client `and `server` folders.
 
 ### Test the Server
 
