@@ -62,7 +62,7 @@ app.post('/inference', upload.single('file'), (req, res) => {
   });
 });
 
-app.get('/getDict', (req, res) => {
+app.get('/dictionaries', (req, res) => {
   // Server json files
   const pinyins = JSON.parse(fs.readFileSync('./configs/pinyins.json'));
   const tones = JSON.parse(fs.readFileSync('./configs/tones.json'));

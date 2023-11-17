@@ -8,7 +8,7 @@ import { getRandomTarget } from "./utilities/utilities";
 import ScorePanel from "./components/ScorePanel";
 
 function App() {
-  const dictUrl = import.meta.env.VITE_HOST_URL + "/getDict";
+  const dictUrl = import.meta.env.VITE_HOST_URL + "/dictionaries";
   const dictionaries = useData(dictUrl);
   const [target, setTarget] = useState(null);
   const [userResult, setUserResult] = useState(null);
