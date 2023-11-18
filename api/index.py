@@ -12,6 +12,7 @@ warnings.filterwarnings("ignore", category=UserWarning)
 
 load_dotenv(find_dotenv())
 PORT = os.getenv("PORT") or 5000
+API_DIR = os.path.dirname(os.path.abspath(__file__))
 
 app = Flask(__name__)
 
@@ -26,13 +27,13 @@ def index():
 
 @app.route("/dictionaries", methods=["GET"])
 def get_dictionaries():
-    with open("datasets/pinyins.json", "r") as f:
+    with open(f"{API_DIR}/datasets/pinyins.json", "r") as f:
         pinyins = json.load(f)
         pinyins = list(pinyins.keys())
-    with open("datasets/tones.json", "r") as f:
+    with open(f"{API_DIR}/datasets/tones.json", "r") as f:
         tones = json.load(f)
         tones = list(tones.keys())
-    with open("datasets/characterDict.json", "r") as f:
+    with open(f"{API_DIR}/datasets/characterDict.json", "r") as f:
         characters = json.load(f)
     print("Ditionaries loaded and ready to be sent...")
     return jsonify({"pinyins": pinyins, "tones": tones, "characterDict": characters})
@@ -41,11 +42,11 @@ def get_dictionaries():
 @app.route('/inference', methods=['POST'])
 def inference_api():
     # Save user input
-    user_filename = "storage/audio.wav"
+    user_filename = f"{API_DIR}/storage/audio.wav"
     user_input = request.files["file"]
     user_input.save(user_filename)
     # Generate target audio
-    target_filename = "storage/target.mp3"
+    target_filename = f"{API_DIR}/storage/target.mp3"
     target = request.form
     target_character = target["character"]
     target_audio = gTTS(text=target_character, lang='zh-cn', slow=False)
@@ -64,7 +65,7 @@ def reference_api():
     character = request.args.get("character")
 
     # Create reference audio
-    reference_filename = "storage/reference.mp3"
+    reference_filename = f"{API_DIR}/storage/reference.mp3"
     reference_audio = gTTS(text=character, lang='zh-cn', slow=False)
     reference_audio.save(reference_filename)
 

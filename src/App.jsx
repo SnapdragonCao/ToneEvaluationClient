@@ -14,7 +14,6 @@ function App() {
   const [userResult, setUserResult] = useState(null);
   const [userBlobUrl, setUserBlobUrl] = useState("");
   const [targetBlobUrl, setTargetBlobUrl] = useState("");
-
   useEffect(() => {
     // Randomly select a target on first render
     if (dictionaries) {

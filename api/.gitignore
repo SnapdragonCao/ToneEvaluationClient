@@ -6,7 +6,8 @@ cluster.json
 
 # audio storage folders
 examples
-storage
+storage/*
+!storage/.gitkeep
 
 
 # Byte-compiled / optimized / DLL files

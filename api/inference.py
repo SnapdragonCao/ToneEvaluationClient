@@ -3,6 +3,9 @@ from Model import SiameseModel
 from torch import nn
 import torch
 import argparse
+import os
+
+CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 def find_dist(ref_embeds, embeds):
     embeds = embeds.squeeze()
@@ -16,7 +19,7 @@ def decode_one_hot(preds, mappings):
     _, idx = torch.max(preds, 0)
     return mappings[int(idx)]
 
-def inference(user_input, reference, config="./config.json", distance_type="cosine"):
+def inference(user_input, reference, config=f"{CURRENT_DIR}/config.json", distance_type="cosine"):
     """Inference function for the Siamese Model, returns the pinyin, tone, and distance score"""
     is_euclid = distance_type == "euclid"
     config = read_json(config)
@@ -26,12 +29,12 @@ def inference(user_input, reference, config="./config.json", distance_type="cosi
     user_mp3 = user_mp3.unsqueeze(0)
 
     swap_key_values = lambda mappings: dict(zip(mappings.values(), mappings.keys()))
-    pinyins_dict = swap_key_values(read_json(f"{config['csv_folder']}/pinyins.json"))
-    tones_dict = swap_key_values(read_json(f"{config['csv_folder']}/tones.json"))
+    pinyins_dict = swap_key_values(read_json(f"{CURRENT_DIR}/datasets/pinyins.json"))
+    tones_dict = swap_key_values(read_json(f"{CURRENT_DIR}/datasets/tones.json"))
 
     model_name = dist_filename(config['siamese_model_name'], distance_type)
-    siamese_model = f"{config['models_folder']}/{model_name}"
-    pretrained_model = f"{config['models_folder']}/{config['pretrained_model_name']}"
+    siamese_model = f"{CURRENT_DIR}/saved_models/{model_name}"
+    pretrained_model = f"{CURRENT_DIR}/saved_models/{config['pretrained_model_name']}"
 
     model = SiameseModel(pretrained_model, len(tones_dict), len(pinyins_dict), config["device"])
     weights = torch.load(siamese_model, map_location=config["device"], weights_only=True)
