@@ -1,0 +1,14 @@
+{
+	"mp3_folder": "./datasets/tone_perfect_all_mp3/tone_perfect",
+	"csv_folder": "./datasets",
+	"models_folder": "./saved_models",
+	"pretrained_model_name": "best_multitask_model.pth",
+	"siamese_model_name": "best_siamese_model.pth",
+	"train_split": 0.6,
+	"val_split": 0.2,
+	"sampling_rate": 44100,
+	"batch_size": 32,
+	"epochs": 15,
+	"device": "cpu",
+	"learning_rate": 0.001
+}
