@@ -11,15 +11,11 @@ export default function Recorder({
 }) {
   const dictionaries = useContext(DictContext);
   const [recording, setRecording] = useState(RecordState.STOP);
-  // const [blobUrl, setBlobUrl] = useState(null);
 
-  const onStop = useCallback(
-    async (audio) => {
-      setUserBlobUrl(audio.url);
-      const blob = audio.blob;
-      // Update the blob file to the server
+  const getInferenceResult = useCallback(
+    async (file) => {
       const formData = new FormData();
-      formData.append("file", blob, "input.wav");
+      formData.append("file", file, "input.wav");
       formData.append("character", target.character);
       formData.append("tone", target.tone);
       formData.append("pinyin", target.pinyin);
@@ -37,6 +33,22 @@ export default function Recorder({
     },
     [dictionaries, target, setUserResult]
   );
+
+  const onStop = useCallback(
+    async (audio) => {
+      setUserBlobUrl(audio.url);
+      const blob = audio.blob;
+      // Update the blob file to the server
+      await getInferenceResult(blob);
+    },
+    [dictionaries, target, setUserResult]
+  );
+
+  const onUpload = useCallback(async (event) => {
+    const file = event.target.files[0];
+    setUserBlobUrl(URL.createObjectURL(file));
+    await getInferenceResult(file);
+  }, []);
 
   const getReference = useCallback(async () => {
     const characterUrl = encodeURIComponent(target.character);
@@ -68,6 +80,17 @@ export default function Recorder({
         >
           Record
         </button>
+      </div>
+      <div className="tooltip flex" data-tip="Upload your own recording.">
+        <label className="btn btn-circle h-24 w-24 border-none bg-sky-700 text-slate-100 shadow-xl hover:bg-sky-600">
+          Upload
+          <input
+            type="file"
+            accept="audio/*"
+            className="hidden"
+            onChange={onUpload}
+          />
+        </label>
       </div>
       <div className="tooltip" data-tip="Get the standard pronunciation.">
         <button
