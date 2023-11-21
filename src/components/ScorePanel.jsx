@@ -1,6 +1,3 @@
-import AudioPlayer from "react-h5-audio-player";
-import "react-h5-audio-player/lib/styles.css";
-
 export default function ScorePanel({ userBlobUrl, targetBlobUrl, score }) {
   const convertedScore = score ? (score * 100).toFixed(2) : null;
   let color = "text-gray-400";

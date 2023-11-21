@@ -9,7 +9,7 @@ const useData = (url) => {
       setData(data);
     };
 
-    fetchData()
+    fetchData();
   }, []);
   return data;
 };

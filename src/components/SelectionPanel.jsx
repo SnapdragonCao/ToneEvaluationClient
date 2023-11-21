@@ -32,9 +32,7 @@ export default function SelectionPanel({
   );
 
   return (
-    <div
-      className="join flex w-full items-center justify-center"
-    >
+    <div className="join flex w-full items-center justify-center">
       <select
         className="select join-item select-bordered"
         value={target ? target.pinyin : "Select a pinyin"}
