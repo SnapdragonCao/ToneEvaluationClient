@@ -70,7 +70,7 @@ export default function SelectionPanel({
         type="button"
         className="btn btn-info join-item"
       >
-        I'm feeling lucky
+        <span class="material-symbols-outlined">Autorenew</span>
       </button>
     </div>
   );
