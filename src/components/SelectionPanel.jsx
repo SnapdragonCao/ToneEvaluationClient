@@ -11,6 +11,7 @@ export default function SelectionPanel({
   setTarget,
   target,
   setTargetBlobUrl,
+  setUserBlobUrl,
   setUserResult,
 }) {
   const dictionaries = useContext(DictContext);
@@ -65,6 +66,7 @@ export default function SelectionPanel({
           const newTarget = getRandomTarget(dictionaries);
           setTarget(newTarget);
           setTargetBlobUrl("");
+          setUserBlobUrl("");
           setUserResult(null);
         }}
         type="button"

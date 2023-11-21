@@ -76,14 +76,14 @@ export default function Recorder({
           }}
           type="button"
           className="btn btn-circle h-24 w-24 border-none bg-emerald-700 text-slate-100 shadow-xl hover:bg-emerald-600"
-          disabled={recording === RecordState.START || target?.character === '⊗'}
+          disabled={recording === RecordState.START || !target || target.character === '⊗'}
         >
           Record
         </button>
       </div>
       <div className="tooltip flex" data-tip="Upload your own recording.">
         <label
-          disabled={target?.character === '⊗'}
+          disabled={!target || target.character === '⊗'}
           className="btn btn-circle h-24 w-24 border-none bg-sky-700 text-slate-100 shadow-xl hover:bg-sky-600">
           Upload
           <input
@@ -99,7 +99,7 @@ export default function Recorder({
           onClick={getReference}
           type="button"
           className="btn btn-circle h-24 w-24 border-none bg-sky-700 text-slate-100 shadow-xl hover:bg-sky-600"
-          disabled={target?.character === '⊗'}
+          disabled={!target || target.character === '⊗'}
         >
           Reference
         </button>
