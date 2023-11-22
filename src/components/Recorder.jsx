@@ -48,7 +48,7 @@ export default function Recorder({
     const file = event.target.files[0];
     setUserBlobUrl(URL.createObjectURL(file));
     await getInferenceResult(file);
-  }, []);
+  }, [target,  dictionaries, setUserResult]);
 
   const getReference = useCallback(async () => {
     const characterUrl = encodeURIComponent(target.character);
