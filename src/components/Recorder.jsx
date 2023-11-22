@@ -45,6 +45,7 @@ export default function Recorder({
   );
 
   const onUpload = useCallback(async (event) => {
+    setUserResult(null);
     const file = event.target.files[0];
     setUserBlobUrl(URL.createObjectURL(file));
     await getInferenceResult(file);
@@ -69,6 +70,7 @@ export default function Recorder({
         <button
           onClick={() => {
             setRecording(RecordState.START);
+            setUserResult(null);
             // Only record up to 3 seconds
             setTimeout(() => {
               setRecording(RecordState.STOP);

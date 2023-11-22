@@ -17,6 +17,7 @@ export default function SelectionPanel({
   const dictionaries = useContext(DictContext);
   const handleChange = useCallback(
     (e) => {
+      setUserResult(null);
       const [name, value] = [e.target.name, e.target.value];
       const character =
         name === "pinyin"
