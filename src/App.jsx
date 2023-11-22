@@ -49,7 +49,7 @@ function App() {
                   />
                 </div>
               </div>
-              <div className="h-full min-w-fit lg:w-fit lg:flex-none">
+              <div className="h-full min-w-fit lg:w-5/12">
                 <ScorePanel
                   userBlobUrl={userBlobUrl}
                   targetBlobUrl={targetBlobUrl}
